@@ -20,7 +20,7 @@ const postRegister = async (req, res) => {
 
         const token = 'JWT TOKEN';
 
-        res.status(201).json({
+        return res.status(201).json({
             user: {
                 email: user.email,
                 token: token,
@@ -30,7 +30,7 @@ const postRegister = async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        return res.status(500).send("Error occured. Please try again");
+        return res.status(500).send("Error occurred. Please try again");
     }
 };
 
