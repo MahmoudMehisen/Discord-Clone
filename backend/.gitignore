@@ -32,3 +32,7 @@ npm-debug.log
 .DS_Store
 
 .env
+/.idea/.gitignore
+/.idea/backend.iml
+/.idea/modules.xml
+/.idea/vcs.xml
