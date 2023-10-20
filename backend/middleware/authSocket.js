@@ -17,4 +17,4 @@ const verifyTokenSocket = (socket, next) => {
 
 }
 
-module.exports = verifyTokenSocket();
+module.exports = verifyTokenSocket;

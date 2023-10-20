@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const socketServer = require("./socketServer")
 const authRoutes = require("./routes/authRoutes");
-const friendInvitationRoutes = require("./routes/authRoutes")
+const friendInvitationRoutes = require("./routes/friendInvitationRoutes")
 
 const PORT = process.env.PORT || process.env.API_PORT;
 
