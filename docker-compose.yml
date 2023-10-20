@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: discord-mongo
+    ports:
+      - '27017:27017'
+    env_file:
+      - .env
+    volumes:
+      - /data/mongodb/db:/data/db
+  
+  backend:
+    build:
+      context: backend
+    container_name: backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/backend
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+  
+  frontend:
+    build:
+      context: frontend
+    container_name: frontend
+    ports:
+      - "3000:5000"
+    volumes:
+      - ./frontend:/frontend
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    
