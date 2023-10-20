@@ -1,5 +1,7 @@
 const authSocket = require("./middleware/authSocket")
 const newConnectionHandler = require("./socketHandlers/newConnectionHandler");
+const {disconnect} = require("mongoose");
+const disconnectHandler = require("./socketHandlers/disconnectHandler");
 const registerSocketServer = (server) => {
     const io = require('socket.io')(server, {
         cors: {
@@ -18,6 +20,9 @@ const registerSocketServer = (server) => {
 
         newConnectionHandler(socket, io);
 
+        socket.on('disconnect',()=>{
+            disconnectHandler(socket);
+        })
     })
 
 }
