@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,6 +15,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import { loginRequest } from "@/api/auth";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/store/auth-state";
 
 const FormSchema = z.object({
   email: z.string().email("Invalid email!").min(1, "Invalid email!"),
@@ -23,19 +25,32 @@ const FormSchema = z.object({
 });
 
 const Login = () => {
+  const router = useRouter();
+  const { setToken, state } = useAuth();
+
+  if (state.token) {
+    router.push(`/`);
+  }
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const { email, password } = data;
+      const response = await loginRequest(email, password);
+      setToken(response?.data?.user?.token);
+      toast({
+        title: `welcome back ${response.data.user.username}`,
+      });
+      router.push(`/`);
+    } catch (error: any) {
+      toast({
+        title: `${error?.response?.data}`,
+        variant: "destructive",
+      });
+    }
   }
 
   return (

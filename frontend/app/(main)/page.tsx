@@ -1,12 +1,5 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]";
+import AuthRouting from "./_components/auth-router";
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    redirect("/login");
-  } else {
-    return <main>hello</main>;
-  }
+  return <AuthRouting />;
 }

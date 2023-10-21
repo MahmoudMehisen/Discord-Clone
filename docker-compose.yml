@@ -23,15 +23,15 @@ services:
     depends_on:
       - mongo
 
-  frontend:
-    build:
-      context: frontend
-    container_name: frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/frontend
-    env_file:
-      - frontend/.env
-    depends_on:
-      - backend
+  # frontend:
+  #   build:
+  #     context: frontend
+  #   container_name: frontend
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./frontend:/frontend
+  #   env_file:
+  #     - frontend/.env
+  #   depends_on:
+  #     - backend
