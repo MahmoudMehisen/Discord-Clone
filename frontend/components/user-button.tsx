@@ -8,6 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface UserProfileCircleProps {
   firstName: string;
@@ -19,6 +21,8 @@ const UserProfileCircle: React.FC<UserProfileCircleProps> = ({
   firstName,
   lastName,
 }) => {
+  const router = useRouter();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger onClick={(e) => e.stopPropagation()} asChild>
@@ -37,7 +41,14 @@ const UserProfileCircle: React.FC<UserProfileCircleProps> = ({
         side="bottom"
         forceMount
       >
-        <DropdownMenuItem className="text-red-500" onClick={() => {}}>
+        <DropdownMenuItem
+          className="text-red-500"
+          onClick={() =>
+            signOut({ redirect: false }).then(() => {
+              router.push("/login");
+            })
+          }
+        >
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

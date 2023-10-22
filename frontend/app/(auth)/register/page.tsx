@@ -17,6 +17,8 @@ import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { registerRequest } from "@/api/auth";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { ImSpinner2 } from "react-icons/im";
 
 const FormSchema = z.object({
   email: z.string().email("Invalid email!").min(1, "Invalid email!"),
@@ -26,6 +28,19 @@ const FormSchema = z.object({
 
 const Register = () => {
   const router = useRouter();
+  // const { data: session, status } = useSession();
+
+  // if (status === "authenticated" && session.user) {
+  //   return router.push("/channels");
+  // }
+
+  // if (status === "loading") {
+  //   return (
+  //     <div className="flex items-center  justify-center border-solid border-20 rounded-2xl w-[100px] h-[100px] bg-background">
+  //       <ImSpinner2 className="animate-spin h-12 w-12" />
+  //     </div>
+  //   );
+  // }
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

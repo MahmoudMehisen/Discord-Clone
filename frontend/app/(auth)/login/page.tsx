@@ -32,18 +32,6 @@ const Login = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  if (status === "authenticated" && session.user) {
-    return router.push("/channels");
-  }
-
-  if (status === "loading") {
-    return (
-      <div className="flex items-center  justify-center border-solid border-20 rounded-2xl w-[100px] h-[100px] bg-background">
-        <ImSpinner2 className="animate-spin h-12 w-12" />
-      </div>
-    );
-  }
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -81,6 +69,18 @@ const Login = () => {
         variant: "destructive",
       });
     }
+  }
+
+  if (status === "authenticated" && session.user) {
+    return router.push("/channels");
+  }
+
+  if (status === "loading") {
+    return (
+      <div className="flex items-center  justify-center border-solid border-20 rounded-2xl w-[100px] h-[100px] bg-background">
+        <ImSpinner2 className="animate-spin h-12 w-12" />
+      </div>
+    );
   }
 
   return (
