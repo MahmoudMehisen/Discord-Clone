@@ -1,17 +1,17 @@
 import axios from "axios";
 
+const BASE_URL = "http://localhost:5000/api";
+
 const Axios = axios.create({
-  baseURL: "http://localhost:5000/api",
-  timeout: 10000,
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-Axios.interceptors.request.use(async (config) => {
-  const token = await localStorage.getItem("token");
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+export const axiosAuth = axios.create({
+  baseURL: BASE_URL,
+  headers: { "Content-Type": "application/json" },
 });
 
 export default Axios;

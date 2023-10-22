@@ -17,7 +17,8 @@ import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { loginRequest } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/store/auth-state";
+import { signIn } from "next-auth/react";
+// import { useAuth } from "@/store/auth-state";
 
 const FormSchema = z.object({
   email: z.string().email("Invalid email!").min(1, "Invalid email!"),
@@ -26,24 +27,42 @@ const FormSchema = z.object({
 
 const Login = () => {
   const router = useRouter();
-  const { setToken, state } = useAuth();
+  // const { setToken, state } = useAuth();
 
-  if (state.token) {
-    router.push(`/`);
-  }
+  // if (state.token) {
+  //   router.push(`/`);
+  // }
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       const { email, password } = data;
-      const response = await loginRequest(email, password);
-      setToken(response?.data?.user?.token);
-      toast({
-        title: `welcome back ${response.data.user.username}`,
+
+      const res = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
       });
+      if (res?.status === 401) {
+        toast({
+          title: `Email or password is incorrect`,
+          variant: "destructive",
+        });
+        return;
+      }
+      if (res?.error) {
+        toast({
+          title: `${res?.error}`,
+          variant: "destructive",
+        });
+      }
       router.push(`/`);
     } catch (error: any) {
       toast({
@@ -75,7 +94,7 @@ const Login = () => {
                   EMAIL <strong className="text-red-500">*</strong>
                 </FormLabel>
                 <FormControl>
-                  <Input className="focus:border-0" type="email" {...field} />
+                  <Input className="focus:border-0" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -3,8 +3,9 @@ import { Open_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
+import NextTopLoader from "nextjs-toploader";
+import Providers from "@/providers/session-provider";
 import "./globals.css";
-import { AuthProvider } from "@/store/auth-state";
 
 export const metadata: Metadata = {
   title: "Discord",
@@ -19,9 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning={true} lang="en">
       <body className={cn(font.className, "bg-white dark:bg-[#313338]")}>
-        <AuthProvider>
+        <Providers>
+          <NextTopLoader />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -31,7 +33,7 @@ export default function RootLayout({
             {children}
             <Toaster />
           </ThemeProvider>
-        </AuthProvider>
+        </Providers>
       </body>
     </html>
   );
