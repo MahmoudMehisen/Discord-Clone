@@ -17,7 +17,10 @@ import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { loginRequest } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { ImSpinner2 } from "react-icons/im";
 // import { useAuth } from "@/store/auth-state";
 
 const FormSchema = z.object({
@@ -27,11 +30,19 @@ const FormSchema = z.object({
 
 const Login = () => {
   const router = useRouter();
-  // const { setToken, state } = useAuth();
+  const { data: session, status } = useSession();
 
-  // if (state.token) {
-  //   router.push(`/`);
-  // }
+  if (status === "authenticated" && session.user) {
+    return router.push("/channels");
+  }
+
+  if (status === "loading") {
+    return (
+      <div className="flex items-center  justify-center border-solid border-20 rounded-2xl w-[100px] h-[100px] bg-background">
+        <ImSpinner2 className="animate-spin h-12 w-12" />
+      </div>
+    );
+  }
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -63,7 +74,7 @@ const Login = () => {
           variant: "destructive",
         });
       }
-      router.push(`/`);
+      router.push(`/channels`);
     } catch (error: any) {
       toast({
         title: `${error?.response?.data}`,
