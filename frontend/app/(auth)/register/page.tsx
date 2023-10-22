@@ -15,27 +15,52 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import { registerRequest } from "@/api/auth";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { ImSpinner2 } from "react-icons/im";
 
 const FormSchema = z.object({
   email: z.string().email("Invalid email!").min(1, "Invalid email!"),
-  username: z.string().min(8, "min 8 characters"),
+  username: z.string().min(5, "min 5 characters"),
   password: z.string().min(6, { message: "please enter your password" }),
 });
 
 const Register = () => {
+  const router = useRouter();
+  // const { data: session, status } = useSession();
+
+  // if (status === "authenticated" && session.user) {
+  //   return router.push("/channels");
+  // }
+
+  // if (status === "loading") {
+  //   return (
+  //     <div className="flex items-center  justify-center border-solid border-20 rounded-2xl w-[100px] h-[100px] bg-background">
+  //       <ImSpinner2 className="animate-spin h-12 w-12" />
+  //     </div>
+  //   );
+  // }
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const { email, password, username } = data;
+
+      const response = await registerRequest(email, password, username);
+      toast({
+        title: `Registration Complete Thank you for joining${response.data.user.username}`,
+      });
+      router.push("/login");
+    } catch (error: any) {
+      toast({
+        title: `${error?.response?.data}`,
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -61,7 +86,7 @@ const Register = () => {
                   EMAIL <strong className="text-red-500">*</strong>
                 </FormLabel>
                 <FormControl>
-                  <Input className="focus:border-0" type="email" {...field} />
+                  <Input className="focus:border-0" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -77,7 +102,7 @@ const Register = () => {
                   USERNAME <strong className="text-red-500">*</strong>
                 </FormLabel>
                 <FormControl>
-                  <Input className="focus:border-0" type="email" {...field} />
+                  <Input className="focus:border-0" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

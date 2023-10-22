@@ -19,7 +19,7 @@ const postRegister = async (req, res) => {
       password: encryptedPassword,
     });
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.TOKEN_KEY,
       {
@@ -27,11 +27,20 @@ const postRegister = async (req, res) => {
       }
     );
 
+    const refreshToken = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.REFRESH_TOKEN_KEY,
+      {
+        expiresIn: "30d", // Set the expiration for a longer period
+      }
+    );
+
     return res.status(201).json({
       user: {
         email: user.email,
-        token: token,
+        accessToken,
         username: username,
+        refreshToken,
       },
     });
   } catch (err) {
