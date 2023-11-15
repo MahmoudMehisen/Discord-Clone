@@ -1,11 +1,11 @@
 const connectedUsers = new Map();
 let io = null;
 
-const setSocketServerInstance = (ioInstance) =>{
+const setSocketServerInstance = (ioInstance) => {
     io = ioInstance;
 }
 
-const getSocketServerInstance  = ()=>{
+const getSocketServerInstance = () => {
     return io;
 }
 
@@ -15,19 +15,19 @@ const addNewConnectedUser = (socketId, userId) => {
     console.log(userId);
 }
 
-const removeConnectedUser = (socketId) =>{
-    if(connectedUsers.has(socketId)){
+const removeConnectedUser = (socketId) => {
+    if (connectedUsers.has(socketId)) {
         connectedUsers.delete(socketId);
         console.log("user disconnected");
         console.log(socketId);
     }
 }
 
-const getActiveConnections = (userId)=>{
+const getActiveConnections = (userId) => {
     const activeConnections = [];
 
-    connectedUsers.forEach(function (key,value){
-        if(value.userId === userId){
+    connectedUsers.forEach(function (key, value) {
+        if (value.userId === userId) {
             activeConnections.push(key);
         }
     })
@@ -35,10 +35,19 @@ const getActiveConnections = (userId)=>{
     return activeConnections;
 }
 
+const getOnlineUsers = () => {
+    const onlineUsers = [];
+    connectedUsers.forEach((value, key) => {
+        onlineUses.push({socketId: key, userId: value.userId});
+    });
+    return onlineUsers;
+}
+
 module.exports = {
     addNewConnectedUser,
     removeConnectedUser,
     getActiveConnections,
     getSocketServerInstance,
-    setSocketServerInstance
+    setSocketServerInstance,
+    getOnlineUsers
 }
