@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/auth", authRoutes);
-app.use("/api/friendInvitation", friendInvitationRoutes)
+app.use("/api/friend-invitation", friendInvitationRoutes)
 const server = http.createServer(app);
 socketServer.registerSocketServer(server);
 

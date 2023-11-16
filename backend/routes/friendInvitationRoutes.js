@@ -12,14 +12,14 @@ const postFriendInvitationSchema = Joi.object({
 });
 
 const inviteDecisionSchema = Joi.object({
-    id:Joi.string().required,
+    id: Joi.string().required(),
 });
 
 router.post("/invite", auth, validator.body(postFriendInvitationSchema), controllers.postInvite);
 
-router.post("/accept",auth, validator.body(inviteDecisionSchema), controllers.postAccept);
+router.post("/accept", auth, validator.body(inviteDecisionSchema), controllers.postAccept);
 
-router.post("/reject",auth, validator.body(inviteDecisionSchema), controllers.postReject);
+router.post("/reject", auth, validator.body(inviteDecisionSchema), controllers.postReject);
 
 
 module.exports = router;

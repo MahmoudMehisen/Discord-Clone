@@ -1,6 +1,6 @@
 const postInvite = require("./postInvite");
-const postInvite = require("./postReject");
-const postInvite = require("./postAccept");
+const postReject = require("./postReject");
+const postAccept = require("./postAccept");
 
 
 exports.controllers = {

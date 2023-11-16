@@ -10,7 +10,7 @@ services:
     volumes:
       - /data/mongodb/db:/data/db
 
-  # backend:
+  #backend:
   #   build:
   #     context: backend
   #   container_name: backend
