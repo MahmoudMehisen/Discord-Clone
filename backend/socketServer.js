@@ -3,6 +3,9 @@ const newConnectionHandler = require("./socketHandlers/newConnectionHandler");
 const {disconnect} = require("mongoose");
 const disconnectHandler = require("./socketHandlers/disconnectHandler");
 const serverStore = require("./serverStore");
+const directMessageHandler = require("./socketHandlers/directMessageHandler")
+const directChatHistoryHandler = require("./socketHandlers/directChatHistoryHandler");
+
 const registerSocketServer = (server) => {
     const io = require('socket.io')(server, {
         cors: {
@@ -26,10 +29,18 @@ const registerSocketServer = (server) => {
 
     io.on('connection', (socket) => {
         console.log("user connected");
-        console.log(socket.id);
 
         newConnectionHandler(socket, io);
         emitOnlineUsers();
+
+        socket.on("direct-message", (data) => {
+            directMessageHandler(socket, data);
+        });
+
+        socket.on("direct-chat-history", (data) => {
+            directChatHistoryHandler(socket, data);
+        });
+
 
         socket.on('disconnect', () => {
             disconnectHandler(socket);
